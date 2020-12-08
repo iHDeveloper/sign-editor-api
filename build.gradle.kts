@@ -8,8 +8,8 @@ plugins {
     id ("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-group = "com.example"
-version = "0.1"
+group = "me.ihdeveloper"
+version = "1.0"
 
 val server = Server(
         /**

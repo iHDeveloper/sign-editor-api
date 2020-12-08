@@ -1,4 +1,4 @@
-package com.example.plugin;
+package me.ihdeveloper.api.sign_editor;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -6,12 +6,12 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("Example plugin enabled!");
+        getLogger().info("Sign Editor API by @iHDeveloper is enabled!");
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("Example plugin disabled!");
+        getLogger().info("Sign Editor API by @iHDeveloper is disabled!");
     }
 
 }
