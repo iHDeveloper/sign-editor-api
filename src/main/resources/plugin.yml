@@ -2,3 +2,6 @@ name: sign-editor-api
 version: 1.0
 author: iHDeveloper
 main: me.ihdeveloper.api.sign_editor.Main
+
+depend:
+  - PacketListenerApi

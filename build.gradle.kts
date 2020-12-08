@@ -30,9 +30,13 @@ val buildTools = BuildTools(
 
 repositories {
     mavenCentral()
+
+    maven(url = "https://repo.inventivetalent.org/content/groups/public")
 }
 
 dependencies {
+    compileOnly("org.inventivetalent.packetlistener:api:3.7.8-SNAPSHOT")
+
     // Include the server jar source
     if (server.jar.exists())
         compileOnly(files(server.jar.absolutePath))
