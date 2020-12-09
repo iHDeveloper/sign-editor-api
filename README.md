@@ -15,6 +15,7 @@ SignEditorAPI.open(player, (player, lines) -> {
     System.out.println("Submitted Input: " + lines[0]);
 }, defaultLines);
 ```
+![image](https://user-images.githubusercontent.com/20463031/101609486-11f7a300-3a18-11eb-9463-11b97a9bf217.png)
 
 ## Getting Started
 1. Add the API plugin to the your `plugin.yml` dependencies
