@@ -1,7 +1,7 @@
 # Sign Editor API
 An API that provides the ability to use custom sign editor in **Spigot** servers.
 
-- [Javadocs](https://ihdeveloper.github.io/sign-editor-api/)
+- [Javadocs](https://sign-editor-api.ihdeveloper.me)
 - [Discord](https://discord.gg/PYjh5xg)
 
 ## Requirements
