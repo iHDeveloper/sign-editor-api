@@ -76,6 +76,10 @@ tasks {
         }
     }
 
+    jar {
+        from("LICENSE")
+    }
+
     /**
      *  Setup the workspace to develop the plugin
      */
