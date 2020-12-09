@@ -9,7 +9,6 @@ server
 *.iml
 *.ipr
 
-
 # Java
 *.class
 *.log
@@ -31,3 +30,6 @@ hs_err_pid*
 gradle-app.setting
 !gradle-wrapper.jar
 .gradletasknamecache
+
+# Firebase
+.firebase

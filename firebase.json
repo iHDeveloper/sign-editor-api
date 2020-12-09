@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "sign-editor-api-ihdeveloper",
+    "public": "docs",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "server/"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
