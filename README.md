@@ -1,8 +1,11 @@
 # Sign Editor API
+[![](https://jitpack.io/v/iHDeveloper/sign-editor-api.svg)](https://jitpack.io/#iHDeveloper/sign-editor-api)
+
 An API that provides the ability to use custom sign editor in **Spigot** servers.
 
 - [Javadocs](https://sign-editor-api.ihdeveloper.me)
 - [Discord](https://discord.gg/PYjh5xg)
+- [Spigot](https://www.spigotmc.org/resources/api-sign-editor.91056/)
 
 ## Requirements
 - [PacketListenerAPI](https://github.com/InventivetalentDev/PacketListenerAPI) by @InventivetalentDev
