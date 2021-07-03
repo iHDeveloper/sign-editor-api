@@ -12,42 +12,45 @@ group = "me.ihdeveloper"
 version = "1.0"
 
 val server = Server(
-        /**
-         * Directory of the server
-         */
-        dir = File("server")
+    /**
+     * Directory of the server
+     */
+    dir = File("server")
 )
 
 val buildTools = BuildTools(
+    rootProject,
 
-        // Server Version
-        minecraftVersion = "1.8.8",
+    // Server Version
+    minecraftVersion = "1.17",
 
-        // Spigot = true
-        // Craftbukkit = false
-        useSpigot = true
+    // Spigot = true
+    // Craftbukkit = false
+    useSpigot = true
 )
 
 repositories {
     mavenCentral()
 
+    maven(url = "https://jitpack.io")
     maven(url = "https://repo.inventivetalent.org/content/groups/public")
 }
 
 dependencies {
-    compileOnly("org.inventivetalent.packetlistener:api:3.7.8-SNAPSHOT")
+    implementation("org.inventivetalent:reflectionhelper:1.18.4-SNAPSHOT")
+    compileOnly("org.inventivetalent:packetlistenerapi:3.9.5-SNAPSHOT")
 
     // Include the server jar source
-    if (server.jar.exists())
+    if (server.jar.exists()) {
         compileOnly(files(server.jar.absolutePath))
-    else if (buildTools.serverJar.exists())
+    } else if (buildTools.serverJar.exists()) {
         compileOnly(files(buildTools.serverJar.absolutePath))
-
-    testCompileOnly("junit", "junit", "4.12")
+    }
 }
 
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 tasks {
@@ -305,12 +308,13 @@ fun printIntro() {
 }
 
 class BuildTools (
-        val minecraftVersion: String,
-        val useSpigot: Boolean
+    val project: Project,
+    val minecraftVersion: String,
+    val useSpigot: Boolean
 ) {
-    val buildDir = File(".build-tools")
+    val buildDir = File(project.rootDir, ".build-tools")
     val file = File(buildDir, "build-tools.jar")
-    val libsDir = File("build/libs/")
+    val libsDir = File(project.buildDir, "libs")
 
     val serverJar = if (useSpigot) {
         File(buildDir, "spigot-${minecraftVersion}.jar")
