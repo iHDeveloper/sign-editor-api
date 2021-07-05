@@ -33,12 +33,11 @@ repositories {
     mavenCentral()
 
     maven(url = "https://jitpack.io")
-    maven(url = "https://repo.inventivetalent.org/content/groups/public")
 }
 
 dependencies {
     implementation("org.inventivetalent:reflectionhelper:1.18.4-SNAPSHOT")
-    compileOnly("org.inventivetalent:packetlistenerapi:3.9.5-SNAPSHOT")
+    compileOnly("org.inventivetalent:packetlistenerapi:3.9.7-SNAPSHOT")
 
     // Include the server jar source
     if (server.jar.exists()) {

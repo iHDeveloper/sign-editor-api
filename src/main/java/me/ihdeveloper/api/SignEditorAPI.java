@@ -1,12 +1,12 @@
 package me.ihdeveloper.api;
 
 import me.ihdeveloper.api.sign_editor.SignEditorCallback;
-import me.ihdeveloper.api.sign_editor.utils.ReflectionUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -74,7 +74,7 @@ public final class SignEditorAPI {
             Material material = savedBlock.getType();
             byte blockData = savedBlock.getData();
 
-            player.sendBlockChange(fakeSignLocation, Material.SIGN_POST, (byte) 0);
+            player.sendBlockChange(fakeSignLocation, Material.OAK_SIGN, (byte) 0);
 
             Class<?> nmsClass$BlockPosition = ReflectionUtils.getNMSClass("BlockPosition");
             Object blockPosition = nmsClass$BlockPosition.getConstructor(int.class, int.class, int.class).newInstance(fakeSignLocation.getBlockX(), fakeSignLocation.getBlockY(), fakeSignLocation.getBlockZ());
