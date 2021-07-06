@@ -86,6 +86,15 @@ tasks {
         from("LICENSE")
     }
 
+    shadowJar {
+        from("LICENSE")
+        relocate("org.inventivetalent.reflection", "me.ihdeveloper.api.internal.inventivetalent.reflection")
+        relocate("org.hamcrest", "me.ihdeveloper.api.internal.hamcrest")
+
+        relocate("junit", "me.ihdeveloper.api.internal.junit")
+        relocate("org.junit", "me.ihdeveloper.api.internal.junit.org")
+    }
+
     /**
      *  Setup the workspace to develop the plugin
      */
@@ -251,10 +260,19 @@ tasks {
      * Configure the generated shadow jar
      */
     shadowJar {
-        val name = "${archiveBaseName.get()}-${archiveVersion.get()}.${archiveExtension.get()}"
+        from("LICENSE")
+        val name = "${archiveBaseName.get()}-${archiveVersion.get()}-plugin.${archiveExtension.get()}"
         archiveFileName.set(name)
     }
 
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("api") {
+            artifact(file("api/build/libs/${project.name}-${project.version}.jar"))
+        }
+    }
 }
 
 subprojects {
@@ -274,8 +292,9 @@ subprojects {
 
     tasks {
         jar {
-            archiveBaseName.set("${rootProject.name}-${project.name}")
+            from("../LICENSE")
             archiveVersion.set("${project.version}")
+            archiveFileName.set("${rootProject.name}-${archiveVersion.get()}.${archiveExtension.get()}")
         }
     }
 }
