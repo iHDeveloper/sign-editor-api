@@ -5,11 +5,14 @@ import java.nio.charset.StandardCharsets
 plugins {
     java
     id ("de.undercouch.download") version "4.0.4"
-    id ("com.github.johnrengelman.shadow") version "5.2.0"
+    id ("com.github.johnrengelman.shadow") version "7.0.0"
+    `maven-publish`
 }
 
-group = "me.ihdeveloper"
-version = "1.0"
+allprojects {
+    group = "me.ihdeveloper"
+    version = "1.0"
+}
 
 val server = Server(
     /**
@@ -36,6 +39,7 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":api"))
     implementation("org.inventivetalent:reflectionhelper:1.18.4-SNAPSHOT")
     compileOnly("org.inventivetalent:packetlistenerapi:3.9.7-SNAPSHOT")
 
@@ -251,6 +255,29 @@ tasks {
         archiveFileName.set(name)
     }
 
+}
+
+subprojects {
+    apply(plugin = "java")
+
+    repositories {
+        mavenCentral()
+
+        maven(url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+        maven(url = "https://oss.sonatype.org/content/repositories/central")
+    }
+
+    configure<JavaPluginConvention> {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    tasks {
+        jar {
+            archiveBaseName.set("${rootProject.name}-${project.name}")
+            archiveVersion.set("${project.version}")
+        }
+    }
 }
 
 /**

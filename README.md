@@ -20,7 +20,7 @@ final String[] defaultLines = {
     "Test Input"
 };
 
-SignEditorAPI.open(player, (player, lines) -> {
+me.ihdeveloper.api.SignEditorAPI.open(player, (player, lines) -> {
     System.out.println("Submitted Input: " + lines[0]);
 }, defaultLines);
 ```
