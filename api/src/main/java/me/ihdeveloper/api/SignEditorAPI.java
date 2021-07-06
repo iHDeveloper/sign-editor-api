@@ -29,6 +29,7 @@ public final class SignEditorAPI {
      *
      * @param logger Logger of the plugin
      * @param server The bukkit server
+     * @param reflection The reflection implementation of the sign NMS functionality (depends on the minecraft server version)
      */
     public static void initialize(Logger logger, Server server, SignReflection reflection) {
         SignEditorAPI.logger = logger;
