@@ -1,6 +1,7 @@
 package me.ihdeveloper.api.sign_editor;
 
 import me.ihdeveloper.api.SignEditorAPI;
+import me.ihdeveloper.api.sign_editor.reflection.LatestSignReflection;
 import me.ihdeveloper.api.sign_editor.reflection.LegacySignReflection;
 import me.ihdeveloper.api.sign_editor.reflection.SignReflection;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,8 +19,7 @@ public final class Main extends JavaPlugin {
         if (MinecraftVersion.getVersion().olderThan(Minecraft.Version.v1_9_R1)) {
             signReflection = new LegacySignReflection();
         } else {
-            /* Not implemented yet! */
-            signReflection = null;
+            signReflection = new LatestSignReflection();
         }
     }
 

@@ -69,7 +69,7 @@ public final class LegacySignReflection implements SignReflection {
     }
 
     @Override
-    public Object updateSign(Location location, String[] lines) {
+    public void updateSignToPlayer(Player player, Location location, String[] lines) {
         try {
             if (world$class == null) {
                 world$class = classResolver.resolve("World");
@@ -99,11 +99,12 @@ public final class LegacySignReflection implements SignReflection {
                 linesAsComponents[line] = chatTextComponentResolver.resolve(new Class[] { String.class }).newInstance(lines[line]);
             }
 
-            packetUpdateSignResolver.resolve(new Class[] { world$class, blockPosition$class, linesAsComponents.getClass() }).newInstance(null, blockPosition$class, linesAsComponents);
+            Object packet = packetUpdateSignResolver.resolve(new Class[] { world$class, blockPosition$class, linesAsComponents.getClass() }).newInstance(null, blockPosition$class, linesAsComponents);
+
+            sendPacketToPlayer(player, packet);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        return null;
     }
 
     @Override

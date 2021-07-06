@@ -8,7 +8,6 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
@@ -75,12 +74,10 @@ public final class SignEditorAPI {
             Material material = savedBlock.getType();
             byte blockData = savedBlock.getData();
 
-//            player.sendBlockChange(fakeSignLocation, Material.OAK_SIGN, (byte) 0);
             signReflection.sendSignChangeToPlayer(player, fakeSignLocation, (byte) 0);
 
             if (lines != null && lines.length == 4) {
-                Object packet = signReflection.updateSign(fakeSignLocation, lines);
-                signReflection.sendPacketToPlayer(player, packet);
+                signReflection.updateSignToPlayer(player, fakeSignLocation, lines);
             }
 
             Object packet = signReflection.openSignEditor(fakeSignLocation);
