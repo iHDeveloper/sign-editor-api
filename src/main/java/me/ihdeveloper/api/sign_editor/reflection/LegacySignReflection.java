@@ -11,8 +11,11 @@ import org.inventivetalent.reflection.resolver.minecraft.NMSClassResolver;
 import java.lang.reflect.Array;
 import java.util.Objects;
 
+/**
+ * Reflection that supports older than 1.9
+ */
 public final class LegacySignReflection implements SignReflection {
-    private final NMSClassResolver classResolver;
+    private final NMSClassResolver classResolver = new NMSClassResolver();
 
     /* Player Connection */
 
@@ -43,10 +46,6 @@ public final class LegacySignReflection implements SignReflection {
     private ConstructorResolver packetUpdateSignResolver;
 
     /* Bukkit Material */
-
-    public LegacySignReflection() {
-        this.classResolver = new NMSClassResolver();
-    }
 
     @Override
     public Object openSignEditor(Location location) {
