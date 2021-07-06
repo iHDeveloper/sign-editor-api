@@ -4,6 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public interface SignReflection {
+    String[] readLines(Object packet);
+
     Object openSignEditor(Location location);
 
     void updateSignToPlayer(Player player, Location location, String[] lines);

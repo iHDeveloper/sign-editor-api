@@ -25,12 +25,32 @@ public final class LatestSignReflection implements SignReflection {
     private Class<?> packetOpenSignEditor$class;
     private ConstructorResolver packetOpenSignEditorResolver;
 
+    private Class<?> packetInUpdateSign$class;
+    private FieldResolver packetInUpdateSignFieldResolver;
+
     /* NMS Player Connection */
     private FieldResolver nmsPlayerFieldResolver;
     private MethodResolver craftPlayerMethodResolver;
 
     private Class<?> playerConnection$class;
     private MethodResolver playerConnectionMethodResolver;
+
+    @Override
+    public String[] readLines(Object packet) {
+        try {
+            if (packetInUpdateSign$class == null) {
+                packetInUpdateSign$class = classResolver.resolve("network.protocol.game.PacketPlayInUpdateSign");
+            }
+            if (packetInUpdateSignFieldResolver == null) {
+                packetInUpdateSignFieldResolver = new FieldResolver(packetInUpdateSign$class);
+            }
+
+            return (String[]) packetInUpdateSignFieldResolver.resolveByFirstType(String[].class).get(packet);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return new String[0];
+    }
 
     @Override
     public Object openSignEditor(Location location) {

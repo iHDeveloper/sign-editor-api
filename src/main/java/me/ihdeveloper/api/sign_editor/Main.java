@@ -25,7 +25,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        PacketListenerAPI.addPacketHandler(new SignEditorPacketHandler(this));
+        PacketListenerAPI.addPacketHandler(new SignEditorPacketHandler(this, signReflection));
         SignEditorAPI.initialize(getLogger(), getServer(), signReflection);
         getLogger().info("Sign Editor API by @iHDeveloper is enabled!");
     }

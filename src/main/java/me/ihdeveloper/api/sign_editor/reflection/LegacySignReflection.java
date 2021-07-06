@@ -6,16 +6,20 @@ import org.bukkit.entity.Player;
 import org.inventivetalent.reflection.resolver.ConstructorResolver;
 import org.inventivetalent.reflection.resolver.FieldResolver;
 import org.inventivetalent.reflection.resolver.MethodResolver;
+import org.inventivetalent.reflection.resolver.ResolverQuery;
 import org.inventivetalent.reflection.resolver.minecraft.NMSClassResolver;
+import org.inventivetalent.reflection.resolver.minecraft.OBCClassResolver;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.util.Objects;
 
 /**
  * Reflection that supports older than 1.9
  */
 public final class LegacySignReflection implements SignReflection {
-    private final NMSClassResolver classResolver = new NMSClassResolver();
+    private final NMSClassResolver nmsClassResolver = new NMSClassResolver();
+    private final OBCClassResolver obcClassResolver = new OBCClassResolver();
 
     /* Player Connection */
 
@@ -37,6 +41,9 @@ public final class LegacySignReflection implements SignReflection {
     private Class<?> chatTextComponent$class;
     private ConstructorResolver chatTextComponentResolver;
 
+    private Class<?> craftChatMessage$class;
+    private MethodResolver craftChatMessageMethodResolver;
+
     /* Packets */
 
     private Class<?> packetOpenSignEditor$class;
@@ -45,16 +52,54 @@ public final class LegacySignReflection implements SignReflection {
     private Class<?> packetUpdateSign$class;
     private ConstructorResolver packetUpdateSignResolver;
 
-    /* Bukkit Material */
+    private Class<?> packetInUpdateSign$class;
+    private FieldResolver packetInUpdateSignFieldResolver;
+
+    @Override
+    public String[] readLines(Object packet) {
+        try {
+            if (chatBaseComponent$class == null) {
+                chatBaseComponent$class = nmsClassResolver.resolve("IChatBaseComponent");
+            }
+            if (craftChatMessage$class == null) {
+                craftChatMessage$class = obcClassResolver.resolve("util.CraftChatMessage");
+            }
+            if (craftChatMessageMethodResolver == null) {
+                craftChatMessageMethodResolver = new MethodResolver(craftChatMessage$class);
+            }
+
+            Method componentToString = craftChatMessageMethodResolver.resolve(new ResolverQuery("fromComponent", chatBaseComponent$class));
+
+            if (packetInUpdateSign$class == null) {
+                packetInUpdateSign$class = nmsClassResolver.resolve("PacketPlayInUpdateSign");
+            }
+            if (packetInUpdateSignFieldResolver == null) {
+                packetInUpdateSignFieldResolver = new FieldResolver(packetInUpdateSign$class);
+            }
+
+            Object[] linesAsComponent = (Object[]) packetInUpdateSignFieldResolver.resolve("b").get(packet);
+
+            String[] lines = new String[4];
+
+            for (int line = 0; line < 4; line++) {
+                lines[line] = (String) componentToString.invoke(null, linesAsComponent[line]);
+            }
+
+            return lines;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return new String[0];
+    }
 
     @Override
     public Object openSignEditor(Location location) {
         try {
             if (blockPosition$class == null) {
-                blockPosition$class = classResolver.resolve("BlockPosition");
+                blockPosition$class = nmsClassResolver.resolve("BlockPosition");
             }
             if (packetOpenSignEditor$class == null) {
-                packetOpenSignEditor$class = classResolver.resolve("PacketPlayOutOpenSignEditor");
+                packetOpenSignEditor$class = nmsClassResolver.resolve("PacketPlayOutOpenSignEditor");
             }
             if (packetOpenSignEditorResolver == null) {
                 packetOpenSignEditorResolver = new ConstructorResolver(packetOpenSignEditor$class);
@@ -72,22 +117,22 @@ public final class LegacySignReflection implements SignReflection {
     public void updateSignToPlayer(Player player, Location location, String[] lines) {
         try {
             if (world$class == null) {
-                world$class = classResolver.resolve("World");
+                world$class = nmsClassResolver.resolve("World");
             }
             if (blockPosition$class == null) {
-                blockPosition$class = classResolver.resolve("BlockPosition");
+                blockPosition$class = nmsClassResolver.resolve("BlockPosition");
             }
             if (chatBaseComponent$class == null) {
-                chatBaseComponent$class = classResolver.resolve("IChatBaseComponent");
+                chatBaseComponent$class = nmsClassResolver.resolve("IChatBaseComponent");
             }
             if (chatTextComponent$class == null) {
-                chatTextComponent$class = classResolver.resolve("ChatTextComponent");
+                chatTextComponent$class = nmsClassResolver.resolve("ChatTextComponent");
             }
             if (chatTextComponentResolver == null) {
                 chatTextComponentResolver = new ConstructorResolver(chatTextComponent$class);
             }
             if (packetUpdateSign$class == null) {
-                packetUpdateSign$class = classResolver.resolve("PacketPlayOutUpdateSign");
+                packetUpdateSign$class = nmsClassResolver.resolve("PacketPlayOutUpdateSign");
             }
             if (packetUpdateSignResolver == null) {
                 packetUpdateSignResolver = new ConstructorResolver(packetUpdateSign$class);
@@ -127,7 +172,7 @@ public final class LegacySignReflection implements SignReflection {
             }
 
             if (playerConnection$class == null) {
-                playerConnection$class = classResolver.resolve("PlayerConnection");
+                playerConnection$class = nmsClassResolver.resolve("PlayerConnection");
             }
             if (playerConnectionMethodResolver == null) {
                 playerConnectionMethodResolver = new MethodResolver(playerConnection$class);
@@ -143,7 +188,7 @@ public final class LegacySignReflection implements SignReflection {
     private Object getBlockPositionFromLocation(Location location) {
         try {
             if (blockPosition$class == null) {
-                blockPosition$class = classResolver.resolve("BlockPosition");
+                blockPosition$class = nmsClassResolver.resolve("BlockPosition");
             }
             if (blockPositionResolver == null) {
                 blockPositionResolver = new ConstructorResolver(blockPosition$class);
