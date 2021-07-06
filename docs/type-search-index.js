@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"me.ihdeveloper.api","l":"SignEditorAPI"},{"p":"me.ihdeveloper.api.sign_editor","l":"SignEditorCallback"},{"p":"me.ihdeveloper.api.sign_editor.reflection","l":"SignReflection"}];updateSearchResults();
