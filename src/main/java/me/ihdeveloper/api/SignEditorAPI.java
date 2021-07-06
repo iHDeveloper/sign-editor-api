@@ -1,6 +1,7 @@
 package me.ihdeveloper.api;
 
 import me.ihdeveloper.api.sign_editor.SignEditorCallback;
+import me.ihdeveloper.api.sign_editor.reflection.SignReflection;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -8,9 +9,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
@@ -21,6 +19,7 @@ import java.util.logging.Logger;
 @SuppressWarnings("deprecation")
 public final class SignEditorAPI {
     private static Logger logger;
+    private static SignReflection signReflection;
     private static Map<Object, SignEditorCallback> editorCallback;
     private static Map<Object, Material> savedMaterial;
     private static Map<Object, Byte> savedBlockData;
@@ -32,8 +31,9 @@ public final class SignEditorAPI {
      * @param logger Logger of the plugin
      * @param server The bukkit server
      */
-    public static void initialize(Logger logger, Server server) {
+    public static void initialize(Logger logger, Server server, SignReflection reflection) {
         SignEditorAPI.logger = logger;
+        signReflection = reflection;
         onlineMode = server.getOnlineMode();
         editorCallback = new TreeMap<>();
         savedMaterial = new TreeMap<>();
@@ -61,6 +61,7 @@ public final class SignEditorAPI {
      * @param callback A callback for firing events that happens on the sign editor
      * @param lines The default lines of the sign editor
      */
+    @SuppressWarnings("unused")
     public static void open(Player player, SignEditorCallback callback, String... lines) {
         try {
             if (isInEditor(player)) {
@@ -74,40 +75,16 @@ public final class SignEditorAPI {
             Material material = savedBlock.getType();
             byte blockData = savedBlock.getData();
 
-            player.sendBlockChange(fakeSignLocation, Material.OAK_SIGN, (byte) 0);
-
-            Class<?> nmsClass$BlockPosition = ReflectionUtils.getNMSClass("BlockPosition");
-            Object blockPosition = nmsClass$BlockPosition.getConstructor(int.class, int.class, int.class).newInstance(fakeSignLocation.getBlockX(), fakeSignLocation.getBlockY(), fakeSignLocation.getBlockZ());
-
-            Method player$getHandle = player.getClass().getMethod("getHandle");
-            Object nmsPlayer = player$getHandle.invoke(player);
-
-            Field nmsPlayer$connection = nmsPlayer.getClass().getField("playerConnection");
-
-            Class<?> nmsClass$Packet = ReflectionUtils.getNMSClass("Packet");
-            Object connection = nmsPlayer$connection.get(nmsPlayer);
-            Method connection$sendPacket = connection.getClass().getMethod("sendPacket", nmsClass$Packet);
+//            player.sendBlockChange(fakeSignLocation, Material.OAK_SIGN, (byte) 0);
+            signReflection.sendSignChangeToPlayer(player, fakeSignLocation, (byte) 0);
 
             if (lines != null && lines.length == 4) {
-                Class<?> nmsClass$World = ReflectionUtils.getNMSClass("World");
-                Class<?> nmsClass$IChatBaseComponent = ReflectionUtils.getNMSClass("IChatBaseComponent");
-                Class<?> nmsClass$ChatComponentText = ReflectionUtils.getNMSClass("ChatComponentText");
-
-                Object[] linesAsComponents = (Object[]) Array.newInstance(nmsClass$IChatBaseComponent, 4);
-
-                for (int line = 0; line < 4; line++) {
-                    linesAsComponents[line] = nmsClass$ChatComponentText.getConstructor(String.class).newInstance(lines[line]);
-                }
-
-                Class<?> nmsPacket$UpdateSign = ReflectionUtils.getNMSClass("PacketPlayOutUpdateSign");
-
-                Object updateSign = nmsPacket$UpdateSign.getConstructor(nmsClass$World, nmsClass$BlockPosition, linesAsComponents.getClass()).newInstance(null, blockPosition, linesAsComponents);
-                connection$sendPacket.invoke(connection, updateSign);
+                Object packet = signReflection.updateSign(fakeSignLocation, lines);
+                signReflection.sendPacketToPlayer(player, packet);
             }
 
-            Class<?> nmsPacket$OpenSignEditor = ReflectionUtils.getNMSClass("PacketPlayOutOpenSignEditor");
-            Object openSignEditor = nmsPacket$OpenSignEditor.getConstructor(nmsClass$BlockPosition).newInstance(blockPosition);
-            connection$sendPacket.invoke(connection, openSignEditor);
+            Object packet = signReflection.openSignEditor(fakeSignLocation);
+            signReflection.sendPacketToPlayer(player, packet);
 
             if (onlineMode) {
                 editorCallback.put(player.getUniqueId(), callback);
