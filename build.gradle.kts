@@ -11,7 +11,7 @@ plugins {
 
 allprojects {
     group = "me.ihdeveloper"
-    version = "1.0"
+    version = "1.1"
 }
 
 val server = Server(
